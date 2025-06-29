@@ -22,6 +22,9 @@ jobs:
           sudo apt install -y python3-pip python3-setuptools zip unzip openjdk-17-jdk
           pip install --upgrade pip virtualenv cython
           pip install buildozer
+          
+          # Accept Android SDK licenses
+          yes | /home/runner/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin/sdkmanager --licenses || true
 
       - name: Build APK
         run: |
