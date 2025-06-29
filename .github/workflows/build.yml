@@ -25,8 +25,9 @@ jobs:
         pip install --upgrade pip
         pip install buildozer cython
 
-    - name: Trigger Buildozer SDK Setup
-      run: buildozer android clean
+    - name: Trigger Buildozer SDK & p4a Download
+      run: buildozer android debug --dry-run
+    
 
     - name: Accept Android SDK Licenses
       run: |
@@ -35,4 +36,4 @@ jobs:
 
     - name: Build APK
       run: buildozer android debug
-    
+
