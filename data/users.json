@@ -1,0 +1,6 @@
+[
+  {"username": "shop", "password": "shop", "role": "shop"},
+  {"username": "shop1", "password": "shop", "role": "shop"},
+  {"username": "cust", "password": "cust", "role": "customer"},
+  {"username": "cust1", "password": "cust", "role": "customer"}
+]

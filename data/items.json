@@ -1,0 +1,7 @@
+[
+  {"name": "Tomato", "price": 14, "stock": 10, "image": "/Users/venkats/Desktop/grocery_app/assets/tomatos.jpg", "shop": "shop1"},
+  {"name": "Onion", "price": 20, "stock": 50, "image": "/Users/venkats/Desktop/grocery_app/assets/onion.jpg", "shop": "shop1"},
+  {"name": "Milk", "price": 30, "stock": 60, "image": "/Users/venkats/Desktop/grocery_app/assets/milk.jpg", "shop": "shop1"},
+  {"name": "Bread", "price": 25, "stock": 70, "image": "/Users/venkats/Desktop/grocery_app/assets/breads.jpg", "shop": "shop1"},
+    {"name": "Potato", "price": 13, "stock": 70, "image": "/Users/venkats/Desktop/grocery_app/assets/potatos.jpg", "shop": "shop1"}
+]

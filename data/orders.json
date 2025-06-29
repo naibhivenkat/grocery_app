@@ -1,0 +1,485 @@
+[
+  {
+    "user": "cust1",
+    "shop": "shop1",
+    "items": [
+      {
+        "name": "Tomato",
+        "qty": 2,
+        "price": 14
+      },
+      {
+        "name": "Onion",
+        "qty": 2,
+        "price": 20
+      },
+      {
+        "name": "Milk",
+        "qty": 2,
+        "price": 30
+      },
+      {
+        "name": "Potato",
+        "qty": 4,
+        "price": 13
+      }
+    ],
+    "total": 180,
+    "status": "Delivered",
+    "payment_method": "cash",
+    "datetime": "2025-06-28 18:30:26",
+    "id": "4722f629-5d83-405b-b1ec-506fcb542287"
+  },
+  {
+    "user": "cust2",
+    "shop": "shop1",
+    "items": [
+      {
+        "name": "Onion",
+        "qty": 6,
+        "price": 20
+      },
+      {
+        "name": "Milk",
+        "qty": 4,
+        "price": 30
+      },
+      {
+        "name": "Bread",
+        "qty": 2,
+        "price": 25
+      }
+    ],
+    "total": 290,
+    "status": "Delivered",
+    "payment_method": "cash",
+    "datetime": "2025-06-28 18:30:54",
+    "id": "d0a03c6f-1fbe-4be8-b817-c84ed050e32c"
+  },
+  {
+    "user": "cust1",
+    "shop": "shop1",
+    "items": [
+      {
+        "name": "Tomato",
+        "qty": 2,
+        "price": 14
+      },
+      {
+        "name": "Onion",
+        "qty": 2,
+        "price": 20
+      },
+      {
+        "name": "Milk",
+        "qty": 2,
+        "price": 30
+      }
+    ],
+    "total": 128,
+    "status": "Delivered",
+    "payment_method": "cash",
+    "datetime": "2025-06-28 18:41:11",
+    "id": "ba236860-a957-41ef-ae50-52e69ac2eef0"
+  },
+  {
+    "id": "1751121221766",
+    "user": "cust1",
+    "shop": "shop1",
+    "items": [
+      {
+        "name": "Tomato",
+        "qty": 2,
+        "price": 14
+      },
+      {
+        "name": "Onion",
+        "qty": 2,
+        "price": 20
+      },
+      {
+        "name": "Milk",
+        "qty": 2,
+        "price": 30
+      },
+      {
+        "name": "Bread",
+        "qty": 2,
+        "price": 25
+      },
+      {
+        "name": "Potato",
+        "qty": 2,
+        "price": 13
+      }
+    ],
+    "total": 204,
+    "status": "Delivered",
+    "timestamp": "2025-06-28 20:03:41"
+  },
+  {
+    "id": "1751121228934",
+    "user": "cust1",
+    "shop": "shop1",
+    "items": [
+      {
+        "name": "Tomato",
+        "qty": 1,
+        "price": 14
+      },
+      {
+        "name": "Bread",
+        "qty": 1,
+        "price": 25
+      },
+      {
+        "name": "Milk",
+        "qty": 1,
+        "price": 30
+      }
+    ],
+    "total": 69,
+    "status": "Delivered",
+    "timestamp": "2025-06-28 20:03:48"
+  },
+  {
+    "id": "1751121248439",
+    "user": "cust2",
+    "shop": "shop1",
+    "items": [
+      {
+        "name": "Onion",
+        "qty": 2,
+        "price": 20
+      },
+      {
+        "name": "Milk",
+        "qty": 2,
+        "price": 30
+      },
+      {
+        "name": "Bread",
+        "qty": 2,
+        "price": 25
+      }
+    ],
+    "total": 150,
+    "status": "Delivered",
+    "timestamp": "2025-06-28 20:04:08"
+  },
+  {
+    "id": "1751121256217",
+    "user": "cust2",
+    "shop": "shop1",
+    "items": [
+      {
+        "name": "Bread",
+        "qty": 1,
+        "price": 25
+      },
+      {
+        "name": "Potato",
+        "qty": 1,
+        "price": 13
+      },
+      {
+        "name": "Tomato",
+        "qty": 1,
+        "price": 14
+      }
+    ],
+    "total": 52,
+    "status": "Delivered",
+    "timestamp": "2025-06-28 20:04:16"
+  },
+  {
+    "id": "1751122827807",
+    "user": "cust1",
+    "shop": "shop1",
+    "items": [
+      {
+        "name": "Onion",
+        "qty": 1,
+        "price": 20
+      },
+      {
+        "name": "Bread",
+        "qty": 1,
+        "price": 25
+      }
+    ],
+    "total": 45,
+    "status": "Delivered",
+    "timestamp": "2025-06-28 20:30:27"
+  },
+  {
+    "id": "1751122847970",
+    "user": "cust2",
+    "shop": "shop1",
+    "items": [
+      {
+        "name": "Tomato",
+        "qty": 3,
+        "price": 14
+      },
+      {
+        "name": "Onion",
+        "qty": 1,
+        "price": 20
+      },
+      {
+        "name": "Milk",
+        "qty": 1,
+        "price": 30
+      }
+    ],
+    "total": 92,
+    "status": "Delivered",
+    "timestamp": "2025-06-28 20:30:47"
+  },
+  {
+    "id": "1751124305298",
+    "user": "cust1",
+    "shop": "shop1",
+    "items": [
+      {
+        "name": "Tomato",
+        "qty": 5,
+        "price": 14
+      },
+      {
+        "name": "Onion",
+        "qty": 4,
+        "price": 20
+      },
+      {
+        "name": "Milk",
+        "qty": 2,
+        "price": 30
+      }
+    ],
+    "total": 210,
+    "status": "Delivered",
+    "timestamp": "2025-06-28 20:55:05",
+    "unavailable_items": [
+      "Onion",
+      "Milk"
+    ]
+  },
+  {
+    "id": "1751124310887",
+    "user": "cust1",
+    "shop": "shop1",
+    "items": [
+      {
+        "name": "Bread",
+        "qty": 5,
+        "price": 25
+      },
+      {
+        "name": "Potato",
+        "qty": 6,
+        "price": 13
+      }
+    ],
+    "total": 203,
+    "status": "Delivered",
+    "timestamp": "2025-06-28 20:55:10"
+  },
+  {
+    "id": "1751125088564",
+    "user": "cust1",
+    "shop": "shop1",
+    "items": [],
+    "total": 384,
+    "status": "Delivered",
+    "timestamp": "2025-06-28 21:08:08",
+    "unavailable_items": [
+      "Tomato",
+      "Milk",
+      "Potato"
+    ]
+  },
+  {
+    "id": "1751125096853",
+    "user": "cust1",
+    "shop": "shop1",
+    "items": [
+      {
+        "name": "Milk",
+        "qty": 4,
+        "price": 30
+      },
+      {
+        "name": "Potato",
+        "qty": 4,
+        "price": 13
+      },
+      {
+        "name": "Tomato",
+        "qty": 2,
+        "price": 14
+      }
+    ],
+    "total": 200,
+    "status": "Delivered",
+    "timestamp": "2025-06-28 21:08:16",
+    "unavailable_items": []
+  },
+  {
+    "id": "1751125120097",
+    "user": "cust2",
+    "shop": "shop1",
+    "items": [
+      {
+        "name": "Onion",
+        "qty": 5,
+        "price": 20
+      },
+      {
+        "name": "Tomato",
+        "qty": 5,
+        "price": 14
+      },
+      {
+        "name": "Potato",
+        "qty": 4,
+        "price": 13
+      },
+      {
+        "name": "Bread",
+        "qty": 4,
+        "price": 25
+      }
+    ],
+    "total": 322,
+    "status": "Delivered",
+    "timestamp": "2025-06-28 21:08:40",
+    "unavailable_items": [],
+    "total_price": 72
+  },
+  {
+    "id": "1751125127846",
+    "user": "cust2",
+    "shop": "shop1",
+    "items": [
+      {
+        "name": "Bread",
+        "qty": 4,
+        "price": 25
+      },
+      {
+        "name": "Milk",
+        "qty": 4,
+        "price": 30
+      },
+      {
+        "name": "Onion",
+        "qty": 2,
+        "price": 20
+      },
+      {
+        "name": "Tomato",
+        "qty": 3,
+        "price": 14
+      }
+    ],
+    "total": 302,
+    "status": "Delivered",
+    "timestamp": "2025-06-28 21:08:47",
+    "unavailable_items": [],
+    "total_price": 89
+  },
+  {
+    "id": "1751125505782",
+    "user": "cust2",
+    "shop": "shop1",
+    "items": [
+      {
+        "name": "Milk",
+        "qty": 9,
+        "price": 30
+      },
+      {
+        "name": "Bread",
+        "qty": 7,
+        "price": 25
+      },
+      {
+        "name": "Onion",
+        "qty": 11,
+        "price": 20
+      }
+    ],
+    "total": 665,
+    "status": "Delivered",
+    "timestamp": "2025-06-28 21:15:05",
+    "unavailable_items": [],
+    "total_price": 75
+  },
+  {
+    "id": "1751129433776",
+    "user": "cust1",
+    "shop": "shop1",
+    "items": [
+      {
+        "name": "Onion",
+        "qty": 2,
+        "price": 13.333333333333334,
+        "unit_price": 6.666666666666667
+      },
+      {
+        "name": "Milk",
+        "qty": 10,
+        "price": 30
+      },
+      {
+        "name": "Bread",
+        "qty": 5,
+        "price": 17.857142857142858,
+        "unit_price": 3.5714285714285716
+      }
+    ],
+    "total": 710,
+    "status": "Delivered",
+    "timestamp": "2025-06-28 22:20:33",
+    "unavailable_items": [
+      "Potato",
+      "Tomato"
+    ],
+    "total_price": 61.19047619047619
+  },
+  {
+    "id": "1751129465235",
+    "user": "cust2",
+    "shop": "shop1",
+    "items": [],
+    "total": 1050,
+    "status": "Delivered",
+    "timestamp": "2025-06-28 22:21:05",
+    "unavailable_items": [
+      "Tomato",
+      "Milk",
+      "Onion",
+      "Bread",
+      "Potato"
+    ],
+    "total_price": 0
+  },
+  {
+    "id": "1751185907018",
+    "user": "cust",
+    "shop": "shop1",
+    "items": [
+      {
+        "name": "Tomato",
+        "qty": 4,
+        "price": 14
+      }
+    ],
+    "total": 56,
+    "status": "Pending",
+    "timestamp": "2025-06-29 14:01:47",
+    "shop_username": "shop1"
+  }
+]
