@@ -37,11 +37,17 @@ jobs:
             m4 \
             texinfo \
             libffi-dev
-
+          
+          # Ensure libtool macros are registered for autoreconf
+          aclocal_dir=$(aclocal --print-ac-dir)
+          sudo cp /usr/share/aclocal/libtool.m4 $aclocal_dir/
+          sudo cp /usr/share/aclocal/lt*.m4 $aclocal_dir/
+          
           pip install --upgrade pip
           pip install buildozer cython
       
       
+
       - name: Trigger Buildozer Setup (to install internal SDK)
         run: |
           buildozer android update || true
