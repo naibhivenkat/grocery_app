@@ -12,9 +12,9 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Set up Python
-        uses: actions/setup-python@v5 # Recommend updating to v5 for best practice
+        uses: actions/setup-python@v5 # Keep v5
         with:
-          python-version: '3.10' # Use '3.10' or '3.10.x' if you prefer a specific patch
+          python-version: '3.10'
 
       - name: Install dependencies
         run: |
@@ -23,26 +23,32 @@ jobs:
           pip install --upgrade pip virtualenv cython
           pip install buildozer
 
-      - name: Initialize Buildozer and Accept Android SDK Licenses
+      - name: Ensure Buildozer Downloads Android SDK Components
         run: |
-          # First, run buildozer once to ensure the Android SDK components (like sdkmanager) are downloaded.
-          # This run will likely fail due to license issues, but it sets up the necessary directories.
-          buildozer android debug || true # Allow this command to fail gracefully
+          # This command will trigger buildozer to download and set up the Android SDK
+          # including cmdline-tools. It will likely fail on license acceptance,
+          # but its purpose is to get the SDK tools in place.
+          # We'll also specifically check for 'sdkmanager' after this attempt.
+          buildozer android update --verbose || true
+          
+          # Wait a bit to ensure files are written, though not strictly necessary on fast I/O
+          sleep 5
 
-          # Now, accept the licenses. The sdkmanager should now be present.
-          # We search for sdkmanager in the common buildozer path.
+          # Now, verify if sdkmanager exists before attempting to accept licenses
           SDK_MANAGER_PATH="/home/runner/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin/sdkmanager"
-
-          # Verify sdkmanager exists before trying to run it
           if [ -f "$SDK_MANAGER_PATH" ]; then
-            yes | "$SDK_MANAGER_PATH" --licenses
+            echo "sdkmanager found. Proceeding to accept licenses."
+            yes | "$SDK_MANAGER_PATH" --licenses || true # Add || true here too for robustness
           else
-            echo "Error: sdkmanager not found at $SDK_MANAGER_PATH. Check buildozer's SDK installation path."
-            exit 1 # Fail the workflow if sdkmanager isn't found
+            echo "Error: sdkmanager STILL not found at $SDK_MANAGER_PATH after initial buildozer update."
+            echo "This indicates Buildozer failed to download the Android SDK command-line tools."
+            echo "Review Buildozer logs for specific download errors."
+            exit 1
           fi
 
-      - name: Build APK (Second Attempt after License Acceptance)
+      - name: Build APK
         run: |
+          # This is the actual build command, which should now succeed as licenses are accepted
           buildozer android debug
 
       - name: Upload APK
