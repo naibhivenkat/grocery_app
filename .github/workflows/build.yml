@@ -23,9 +23,19 @@ jobs:
           sudo apt update
           sudo apt install -y \
             python3-pip python3-setuptools zip unzip openjdk-17-jdk \
-            autoconf automake libtool
+            autoconf automake libtool libtool-bin
+          # Fix for missing libtool macros
+          sudo mkdir -p /usr/share/aclocal
+          sudo ln -s /usr/share/libtool/build-aux/ltmain.sh /usr/share/aclocal/ltmain.sh || true
+          sudo ln -s /usr/share/aclocal/libtool.m4 /usr/share/aclocal/libtool.m4 || true
+          sudo ln -s /usr/share/aclocal/ltoptions.m4 /usr/share/aclocal/ltoptions.m4 || true
+          sudo ln -s /usr/share/aclocal/ltsugar.m4 /usr/share/aclocal/ltsugar.m4 || true
+          sudo ln -s /usr/share/aclocal/ltversion.m4 /usr/share/aclocal/ltversion.m4 || true
+          sudo ln -s /usr/share/aclocal/lt~obsolete.m4 /usr/share/aclocal/lt~obsolete.m4 || true
+
           pip install --upgrade pip virtualenv cython
           pip install buildozer
+      
       
 
       - name: Trigger Buildozer Setup (to install internal SDK)
