@@ -18,12 +18,15 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Install Dependencies
+      - name: Install dependencies
         run: |
           sudo apt update
-          sudo apt install -y zip unzip openjdk-17-jdk python3-pip python3-setuptools
-          pip install --upgrade pip
-          pip install virtualenv cython buildozer
+          sudo apt install -y \
+            python3-pip python3-setuptools zip unzip openjdk-17-jdk \
+            autoconf automake libtool
+          pip install --upgrade pip virtualenv cython
+          pip install buildozer
+      
 
       - name: Trigger Buildozer Setup (to install internal SDK)
         run: |
