@@ -8,47 +8,42 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout Repository
+        uses: actions/checkout@v2
 
       - name: Set up Python
-        uses: actions/setup-python@v5 # Keep v5
+        uses: actions/setup-python@v5
         with:
           python-version: '3.10'
 
-      - name: Install dependencies
+      - name: Install Dependencies
         run: |
           sudo apt update
-          sudo apt install -y python3-pip python3-setuptools zip unzip openjdk-17-jdk
-          pip install --upgrade pip virtualenv cython
-          pip install buildozer
+          sudo apt install -y zip unzip openjdk-17-jdk python3-pip python3-setuptools
+          pip install --upgrade pip
+          pip install virtualenv cython buildozer
 
-      - name: Ensure Buildozer Downloads Android SDK Components
+      - name: Manually Install Android SDK and Accept Licenses
         run: |
-          # This command will trigger buildozer to download and set up the Android SDK
-          # including cmdline-tools. It will likely fail on license acceptance,
-          # but its purpose is to get the SDK tools in place.
-          # We'll also specifically check for 'sdkmanager' after this attempt.
-          buildozer android update --verbose || true
-          
-          # Wait a bit to ensure files are written, though not strictly necessary on fast I/O
-          sleep 5
+          mkdir -p ~/.android/ && touch ~/.android/repositories.cfg
+          mkdir -p $HOME/android-sdk/cmdline-tools
+          cd $HOME/android-sdk/cmdline-tools
+          wget https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O cmdline-tools.zip
+          unzip cmdline-tools.zip
+          mv cmdline-tools latest
 
-          # Now, verify if sdkmanager exists before attempting to accept licenses
-          SDK_MANAGER_PATH="/home/runner/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin/sdkmanager"
-          if [ -f "$SDK_MANAGER_PATH" ]; then
-            echo "sdkmanager found. Proceeding to accept licenses."
-            yes | "$SDK_MANAGER_PATH" --licenses || true # Add || true here too for robustness
-          else
-            echo "Error: sdkmanager STILL not found at $SDK_MANAGER_PATH after initial buildozer update."
-            echo "This indicates Buildozer failed to download the Android SDK command-line tools."
-            echo "Review Buildozer logs for specific download errors."
-            exit 1
-          fi
+          export ANDROID_SDK_ROOT=$HOME/android-sdk
+          export PATH=$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$PATH
+
+          yes | sdkmanager --licenses
+          sdkmanager "platform-tools" "platforms;android-33" "build-tools;36.0.0"
 
       - name: Build APK
         run: |
-          # This is the actual build command, which should now succeed as licenses are accepted
+          export ANDROID_SDK_ROOT=$HOME/android-sdk
+          export PATH=$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$PATH
           buildozer android debug
 
       - name: Upload APK
