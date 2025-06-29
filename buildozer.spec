@@ -7,15 +7,17 @@ package.name = groceryapp
 source.dir = .
 source.include_exts = py,png,jpg,kv,atlas,json
 
-requirements = python3,kivy,plyer
+requirements = python3,kivy,plyer,libffi
+
 android.permissions = INTERNET
 
+p4a.local_recipes = ./recipes
 
 android.minapi = 21
 android.ndk = 25b
 
 android.api = 33
-android.build_tools = 36.0.0
+android.build_tools_version = 34.0.0
 
 # For PDF generation
 android.use_android_native_api = False
