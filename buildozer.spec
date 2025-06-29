@@ -10,10 +10,12 @@ source.include_exts = py,png,jpg,kv,atlas,json
 requirements = python3,kivy,plyer,fpdf
 android.permissions = INTERNET
 
-android.api = 33
+
 android.minapi = 21
 android.ndk = 25b
 
+android.api = 33
+android.build_tools = 36.0.0
 
 # For PDF generation
 android.use_android_native_api = False
