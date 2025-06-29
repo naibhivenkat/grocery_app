@@ -7,7 +7,7 @@ package.name = groceryapp
 source.dir = .
 source.include_exts = py,png,jpg,kv,atlas,json
 
-requirements = python3,kivy,plyer,fpdf
+requirements = python3,kivy,plyer
 android.permissions = INTERNET
 
 

@@ -20,21 +20,33 @@ jobs:
 
       - name: Install dependencies
         run: |
-          sudo apt update
-          sudo apt install -y \
-            python3-pip python3-setuptools zip unzip openjdk-17-jdk \
-            autoconf automake libtool libtool-bin
-          # Fix for missing libtool macros
-          sudo mkdir -p /usr/share/aclocal
-          sudo ln -s /usr/share/libtool/build-aux/ltmain.sh /usr/share/aclocal/ltmain.sh || true
-          sudo ln -s /usr/share/aclocal/libtool.m4 /usr/share/aclocal/libtool.m4 || true
-          sudo ln -s /usr/share/aclocal/ltoptions.m4 /usr/share/aclocal/ltoptions.m4 || true
-          sudo ln -s /usr/share/aclocal/ltsugar.m4 /usr/share/aclocal/ltsugar.m4 || true
-          sudo ln -s /usr/share/aclocal/ltversion.m4 /usr/share/aclocal/ltversion.m4 || true
-          sudo ln -s /usr/share/aclocal/lt~obsolete.m4 /usr/share/aclocal/lt~obsolete.m4 || true
+          sudo apt-get update
+          sudo apt-get install -y \
+            build-essential \
+            git \
+            python3-pip \
+            python3-setuptools \
+            zip \
+            unzip \
+            openjdk-17-jdk \
+            autoconf \
+            automake \
+            libtool \
+            libtool-bin \
+            pkg-config \
+            m4 \
+            texinfo \
+            libffi-dev
 
-          pip install --upgrade pip virtualenv cython
-          pip install buildozer
+          # Fix autoconf macros for libtool (required for libffi)
+          sudo mkdir -p /usr/share/aclocal
+          for f in libtool.m4 lt*.m4; do
+            sudo ln -sf /usr/share/aclocal/$f /usr/share/aclocal/$f
+          done
+
+          pip install --upgrade pip
+          pip install buildozer cython
+      
       
       
 
