@@ -27,12 +27,16 @@ jobs:
 
     - name: Trigger Buildozer SDK & p4a Download
       run: buildozer android debug --dry-run
-    
+
 
     - name: Accept Android SDK Licenses
       run: |
         yes | ~/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin/sdkmanager --licenses
-        ~/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin/sdkmanager "platform-tools" "platforms;android-30" "build-tools;34.0.0"
+        ~/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin/sdkmanager \
+          "platform-tools" "platforms;android-30" "build-tools;34.0.0"
+    - name: Remove build-tools 36
+      run: rm -rf ~/.buildozer/android/platform/android-sdk/build-tools/36.0.0 || true
+
 
     - name: Build APK
       run: buildozer android debug
