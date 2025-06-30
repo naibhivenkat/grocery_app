@@ -26,8 +26,9 @@ jobs:
         pip install buildozer cython
 
     # 🔥 Let Buildozer download SDK tools (don't build yet)
-    - name: Trigger SDK install
-      run: buildozer android clean
+    - name: Trigger SDK & P4A Setup (no build)
+      run: buildozer android update
+    
 
     - name: Pre-accept Android SDK Licenses
       run: |
