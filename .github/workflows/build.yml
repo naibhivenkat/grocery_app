@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - "**"
+  workflow_dispatch:
 
 jobs:
   build:
@@ -23,36 +24,33 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y zip unzip openjdk-17-jdk autoconf libtool pkg-config
         pip install --upgrade pip
-        pip install poetry buildozer cython
+        pip install buildozer cython
 
-    - name: Trigger SDK and NDK download
+    - name: Trigger SDK & P4A Setup (no build)
       run: buildozer android update
 
-    - name: Manually accept licenses
+    - name: Accept Android SDK Licenses
       run: |
         mkdir -p ~/.buildozer/android/platform/android-sdk/licenses
         echo "8933bad161af4178b1185d1a37fbf41ea5269c55" > ~/.buildozer/android/platform/android-sdk/licenses/android-sdk-license
         echo "d56f5187479451eabf01fb78af6dfcb131a6481e" >> ~/.buildozer/android/platform/android-sdk/licenses/android-sdk-license
         echo "24333f8a63b6825ea9c5514f83c2829b004d1fee" > ~/.buildozer/android/platform/android-sdk/licenses/android-sdk-preview-license
 
-    - name: Install specific Android SDK tools only
+    - name: Install required Android SDK components (force 34.0.0)
       run: |
-        ~/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin/sdkmanager --sdk_root=${HOME}/.buildozer/android/platform/android-sdk \
+        yes | ~/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin/sdkmanager --licenses || true
+        ~/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin/sdkmanager \
           "platform-tools" "platforms;android-30" "build-tools;34.0.0"
 
-    - name: Remove build-tools 36 completely (if exists)
-      run: rm -rf ~/.buildozer/android/platform/android-sdk/build-tools/36.0.0 || true
-
-    - name: Confirm SDK version (no prompt fallback)
+    - name: Delete Android SDK Build-Tools 36 if present
       run: |
-        echo "sdk.dir=${HOME}/.buildozer/android/platform/android-sdk" > local.properties
-        ~/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin/sdkmanager --list
+        rm -rf ~/.buildozer/android/platform/android-sdk/build-tools/36.0.0 || true
 
     - name: Build APK
       run: buildozer android debug
 
-    - name: Upload APK
+    - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: grocery-app-debug-apk
+        name: grocery-app-apk
         path: bin/*.apk
