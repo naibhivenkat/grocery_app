@@ -21,6 +21,7 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get update
+        sudo apt-get install -y libffi-dev
         sudo apt-get install -y zip unzip openjdk-17-jdk autoconf automake libtool m4 libffi-dev pkg-config build-essential
         pip install --upgrade pip
         pip install buildozer cython
@@ -59,9 +60,14 @@ jobs:
         export LIBTOOLIZE="libtoolize"
         export AUTORECONF_FLAGS="--force --install --verbose -I m4"
 
+    - name: Clean Buildozer Cache (Recommended)
+      run: |
+          rm -rf .buildozer
+          rm -rf ~/.buildozer
+
     - name: Build APK
       run: |
-        buildozer android update
+        buildozer android clean
         buildozer android debug
 
     - name: Upload APK artifact
