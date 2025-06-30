@@ -1,85 +1,3 @@
-#name: Build Grocery App APK
-#
-#on:
-#  push:
-#    branches:
-#      - "**"
-#
-#jobs:
-#  build:
-#    runs-on: ubuntu-latest
-#
-#    steps:
-#    - name: Checkout code
-#      uses: actions/checkout@v4
-#
-#    - name: Set up Python
-#      uses: actions/setup-python@v4
-#      with:
-#        python-version: '3.10'
-#
-#    - name: Install dependencies
-#      run: |
-#        sudo apt-get update
-#        sudo apt-get install -y libffi-dev
-#        sudo apt-get install -y zip unzip openjdk-17-jdk autoconf automake libtool m4 libffi-dev pkg-config build-essential
-#        pip install --upgrade pip
-#        pip install buildozer cython
-#
-#    - name: Accept Android SDK Licenses
-#      run: |
-#        mkdir -p ~/.buildozer/android/platform/android-sdk/licenses
-#        echo "8933bad161af4178b1185d1a37fbf41ea5269c55" > ~/.buildozer/android/platform/android-sdk/licenses/android-sdk-license
-#        echo "d56f5187479451eabf01fb78af6dfcb131a6481e" >> ~/.buildozer/android/platform/android-sdk/licenses/android-sdk-license
-#        echo "24333f8a63b6825ea9c5514f83c2829b004d1fee" > ~/.buildozer/android/platform/android-sdk/licenses/android-sdk-preview-license
-#
-#    - name: Install Android SDK manually
-#      run: |
-#        SDK_DIR="$HOME/.buildozer/android/platform/android-sdk"
-#        mkdir -p "$SDK_DIR/cmdline-tools"
-#        cd "$SDK_DIR/cmdline-tools"
-#        wget https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip -O cmdline.zip
-#        unzip cmdline.zip
-#        mv cmdline-tools latest
-#        cd "$SDK_DIR"
-#        ln -s cmdline-tools/latest tools
-#        export PATH="$SDK_DIR/cmdline-tools/latest/bin:$PATH"
-#        yes | sdkmanager --sdk_root="$SDK_DIR" \
-#          "platform-tools" \
-#          "platforms;android-30" \
-#          "build-tools;34.0.0"
-#
-##    - name: Patch environment for autogen macros (libffi build)
-##      run: |
-##        echo "Patching autotools environment to allow undefined macros"
-##        export M4=m4
-##        export ACLOCAL="aclocal -I /usr/share/aclocal"
-##        export AUTOMAKE="automake --foreign"
-##        export AUTOCONF="autoconf"
-##        export AUTOHEADER="autoheader"
-##        export LIBTOOLIZE="libtoolize"
-##        export AUTORECONF_FLAGS="--force --install --verbose -I m4"
-#
-#    - name: Fix libtool/autoconf for libffi
-#      run: |
-#        sudo apt-get install -y libtool
-#        cd /usr/include
-#        sudo libtoolize --force
-#        sudo autoreconf --force --install
-#
-#
-#    - name: Build APK
-#      run: |
-#        buildozer android update
-#        buildozer android debug
-#
-#    - name: Upload APK artifact
-#      uses: actions/upload-artifact@v4
-#      with:
-#        name: GroceryApp-debug-apk
-#        path: grocery_app/bin/*.apk
-
-
 name: Build Grocery App APK
 
 on:
@@ -92,15 +10,21 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
+    - name: 🧾 Checkout code
       uses: actions/checkout@v4
 
-    - name: Set up Python
+    - name: 🧹 Clean old build artifacts
+      run: |
+        rm -rf .buildozer
+        rm -rf .cache
+        rm -rf ~/.buildozer
+
+    - name: 🐍 Set up Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.10'
 
-    - name: Install system dependencies
+    - name: 📦 Install system dependencies
       run: |
         sudo apt-get update
         sudo apt-get install -y \
@@ -109,19 +33,19 @@ jobs:
           libffi-dev pkg-config build-essential \
           libncurses6 libstdc++6
 
-    - name: Install Python dependencies
+    - name: 📦 Install Python dependencies
       run: |
         pip install --upgrade pip
         pip install buildozer cython
 
-    - name: Accept Android SDK Licenses
+    - name: ✅ Accept Android SDK Licenses
       run: |
         mkdir -p ~/.buildozer/android/platform/android-sdk/licenses
         echo "8933bad161af4178b1185d1a37fbf41ea5269c55" > ~/.buildozer/android/platform/android-sdk/licenses/android-sdk-license
         echo "d56f5187479451eabf01fb78af6dfcb131a6481e" >> ~/.buildozer/android/platform/android-sdk/licenses/android-sdk-license
         echo "24333f8a63b6825ea9c5514f83c2829b004d1fee" > ~/.buildozer/android/platform/android-sdk/licenses/android-sdk-preview-license
 
-    - name: Install Android SDK manually
+    - name: 📥 Install Android SDK manually
       run: |
         SDK_DIR="$HOME/.buildozer/android/platform/android-sdk"
         mkdir -p "$SDK_DIR/cmdline-tools"
@@ -131,25 +55,23 @@ jobs:
         mv cmdline-tools latest
         cd "$SDK_DIR"
         ln -s cmdline-tools/latest tools
-        export PATH="$SDK_DIR/cmdline-tools/latest/bin:$PATH"
         yes | "$SDK_DIR/cmdline-tools/latest/bin/sdkmanager" --sdk_root="$SDK_DIR" \
           "platform-tools" \
           "platforms;android-30" \
           "build-tools;34.0.0"
 
-    - name: Add SDK tools to PATH
+    - name: 🛠 Add SDK tools to PATH
       run: echo "$HOME/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin" >> $GITHUB_PATH
 
-    - name: Build APK (Update and Debug)
+    - name: 🏗 Build APK (Update & Debug)
       run: |
-          buildozer android update
-          buildozer android debug
+        buildozer android update
+        buildozer android debug
 
-    - name: Clean previous builds (optional but recommended)
+    - name: 🧼 Clean previous builds (optional)
       run: buildozer android clean
 
-
-    - name: Upload APK artifact
+    - name: ⬆️ Upload APK artifact
       uses: actions/upload-artifact@v4
       with:
         name: GroceryApp-debug-apk
