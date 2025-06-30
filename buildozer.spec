@@ -25,12 +25,14 @@ package.name = com.yourcompany.groceryapp
 
 # (str) Package domain (needed for android/ios packaging)
 package.domain = yourcompany.com
-
+android.p4a_repo = https://github.com/kivy/python-for-android.git
+android.p4a_branch = develop
+android.p4a_local_recipes = ./recipes
 # (str) Application versioning (method 1)
 version = 0.1
 
 # (list) Requirements (aka: dependencies)
-requirements = python3,kivy,cffi
+requirements = python3,kivy
 
 # (str) Main application file relative to the source.dir
 source.main = main.py
