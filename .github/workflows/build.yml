@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - "**"
-  workflow_dispatch:
 
 jobs:
   build:
@@ -19,21 +18,24 @@ jobs:
       with:
         python-version: '3.10'
 
-    - name: Install dependencies
+    - name: Install system dependencies
       run: |
         sudo apt-get update
         sudo apt-get install -y zip unzip openjdk-17-jdk autoconf automake libtool pkg-config
+
+    - name: Install Python dependencies
+      run: |
         pip install --upgrade pip
         pip install buildozer cython
 
-    - name: Accept Android SDK Licenses manually
+    - name: Accept Android SDK Licenses
       run: |
         mkdir -p ~/.buildozer/android/platform/android-sdk/licenses
         echo "8933bad161af4178b1185d1a37fbf41ea5269c55" > ~/.buildozer/android/platform/android-sdk/licenses/android-sdk-license
         echo "d56f5187479451eabf01fb78af6dfcb131a6481e" >> ~/.buildozer/android/platform/android-sdk/licenses/android-sdk-license
         echo "24333f8a63b6825ea9c5514f83c2829b004d1fee" > ~/.buildozer/android/platform/android-sdk/licenses/android-sdk-preview-license
 
-    - name: Manually install SDK cmdline tools and required packages
+    - name: Install Android SDK manually
       run: |
         SDK_DIR="$HOME/.buildozer/android/platform/android-sdk"
         mkdir -p "$SDK_DIR/cmdline-tools"
@@ -41,31 +43,22 @@ jobs:
         wget https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip -O cmdline.zip
         unzip cmdline.zip
         mv cmdline-tools latest
-
-        # Link legacy path so buildozer can find tools
         cd "$SDK_DIR"
         ln -s cmdline-tools/latest tools
-
         export PATH="$SDK_DIR/cmdline-tools/latest/bin:$PATH"
-
         yes | sdkmanager --sdk_root="$SDK_DIR" \
           "platform-tools" \
           "platforms;android-30" \
           "build-tools;34.0.0"
 
-    - name: Change to working directory
-      run: cd $GITHUB_WORKSPACE
-
-    - name: Update project for Android
+    - name: Change to project directory
+      working-directory: grocery_app
       run: |
         buildozer android update
-
-    - name: Build APK
-      run: |
         buildozer android debug
 
     - name: Upload APK artifact
       uses: actions/upload-artifact@v4
       with:
         name: GroceryApp-debug-apk
-        path: bin/*.apk
+        path: grocery_app/bin/*.apk
