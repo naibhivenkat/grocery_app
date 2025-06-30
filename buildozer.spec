@@ -30,7 +30,7 @@ package.domain = yourcompany.com
 version = 0.1
 
 # (list) Requirements (aka: dependencies)
-requirements = python3,kivy
+requirements = python3,kivy,cffi
 
 # (str) Main application file relative to the source.dir
 source.main = main.py
