@@ -16,34 +16,43 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.10'
+        python-version: '3.11'  # matches pyproject.toml
 
-    - name: Install dependencies
+    - name: Install Poetry & dependencies
+      run: |
+        curl -sSL https://install.python-poetry.org | python3 -
+        export PATH="$HOME/.local/bin:$PATH"
+        poetry config virtualenvs.create false
+        poetry install
+
+    - name: Install Android & system dependencies
       run: |
         sudo apt-get update
         sudo apt-get install -y zip unzip openjdk-17-jdk autoconf libtool pkg-config
-        pip install --upgrade pip
-        pip install buildozer cython
 
-    # 🔥 Let Buildozer download SDK tools (don't build yet)
-    - name: Trigger SDK & P4A Setup (no build)
+    - name: Trigger Buildozer to install SDK/NDK/p4a
       run: buildozer android update
-    
 
-    - name: Pre-accept Android SDK Licenses
+    - name: Accept Android SDK Licenses
       run: |
         mkdir -p ~/.buildozer/android/platform/android-sdk/licenses
         echo "8933bad161af4178b1185d1a37fbf41ea5269c55" > ~/.buildozer/android/platform/android-sdk/licenses/android-sdk-license
         echo "d56f5187479451eabf01fb78af6dfcb131a6481e" >> ~/.buildozer/android/platform/android-sdk/licenses/android-sdk-license
         echo "24333f8a63b6825ea9c5514f83c2829b004d1fee" > ~/.buildozer/android/platform/android-sdk/licenses/android-sdk-preview-license
 
-    - name: Install required Android SDK components
+    - name: Install specific SDK build tools (avoid 36.0.0)
       run: |
         ~/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin/sdkmanager \
           "platform-tools" "platforms;android-30" "build-tools;34.0.0"
 
-    - name: Remove build-tools 36 (if present)
+    - name: Remove unwanted build-tools 36.0.0
       run: rm -rf ~/.buildozer/android/platform/android-sdk/build-tools/36.0.0 || true
 
     - name: Build APK
       run: buildozer android debug
+
+    - name: Upload APK
+      uses: actions/upload-artifact@v3
+      with:
+        name: GroceryApp-APK
+        path: bin/*.apk
