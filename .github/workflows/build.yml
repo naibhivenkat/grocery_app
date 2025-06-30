@@ -107,7 +107,7 @@ jobs:
           zip unzip openjdk-17-jdk \
           autoconf automake libtool m4 \
           libffi-dev pkg-config build-essential \
-          libncurses5 libstdc++6
+          libncurses6 libstdc++6
 
     - name: Install Python dependencies
       run: |
