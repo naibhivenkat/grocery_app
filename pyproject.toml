@@ -11,7 +11,7 @@ package-mode = false
 python = "3.11.*"
 
 # ✅ Required for Buildozer & Android builds
-buildozer = "^1.5.0"
+buildozer = "1.5.0"
 cython = "^3.0.10"
 
 # ✅ App-specific dependency for PDF generation
