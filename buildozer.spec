@@ -29,11 +29,14 @@ package.domain = yourcompany.com
 # (str) Application versioning (method 1)
 version = 0.1
 
-# (list) Requirements (aka: dependecies)
+# (list) Requirements (aka: dependencies)
 requirements = python3,kivy
 
-# (str) Main application file relative to the project root
-main.py = main.py
+# (str) Main application file relative to the source.dir
+source.main = main.py
+
+# (str) Directory of the main.py and other source files
+source.dir = .
 
 # (str) Kivy version to use
 kivy.version = 2.1.0
@@ -43,6 +46,7 @@ android.permissions = INTERNET
 
 # (bool) Indicate if your application should be fullscreen or not
 fullscreen = 0
+
 
 [buildozer]
 
@@ -57,6 +61,3 @@ android.sdk = 30
 
 # (str) AAB or APK. Default is apk
 android.release = 0
-
-# Source DIR
-source.dir = .
