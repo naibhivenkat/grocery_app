@@ -52,8 +52,8 @@ jobs:
           "build-tools;34.0.0"
 
     - name: Change to project directory
-      working-directory: grocery_app
       run: |
+        cd grocery_app
         buildozer android update
         buildozer android debug
 
