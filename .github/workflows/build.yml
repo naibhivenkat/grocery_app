@@ -1,118 +1,58 @@
-#name: Build Grocery App APK
-#
-#on:
-#  push:
-#    branches:
-#      - "**"
-#  workflow_dispatch:
-#
-#jobs:
-#  build:
-#    runs-on: ubuntu-latest
-#
-#    steps:
-#    - name: Checkout code
-#      uses: actions/checkout@v3
-#
-#    - name: Set up Python
-#      uses: actions/setup-python@v4
-#      with:
-#        python-version: '3.10'
-#
-#    - name: Install system dependencies
-#      run: |
-#        sudo apt-get update
-#        sudo apt-get install -y zip unzip openjdk-17-jdk autoconf libtool pkg-config
-#        pip install --upgrade pip
-#        pip install buildozer cython
-#
-#    - name: Trigger SDK & P4A Setup (no build)
-#      run: buildozer android update
-#
-#    - name: Accept Android SDK Licenses
-#      run: |
-#        mkdir -p ~/.buildozer/android/platform/android-sdk/licenses
-#        echo "8933bad161af4178b1185d1a37fbf41ea5269c55" > ~/.buildozer/android/platform/android-sdk/licenses/android-sdk-license
-#        echo "d56f5187479451eabf01fb78af6dfcb131a6481e" >> ~/.buildozer/android/platform/android-sdk/licenses/android-sdk-license
-#        echo "24333f8a63b6825ea9c5514f83c2829b004d1fee" > ~/.buildozer/android/platform/android-sdk/licenses/android-sdk-preview-license
-#
-#    - name: Install required Android SDK components (force 34.0.0)
-#      run: |
-#        yes | ~/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin/sdkmanager --licenses || true
-#        ~/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin/sdkmanager \
-#          "platform-tools" "platforms;android-30" "build-tools;34.0.0"
-#
-#    - name: Delete Android SDK Build-Tools 36 if present
-#      run: |
-#        rm -rf ~/.buildozer/android/platform/android-sdk/build-tools/36.0.0 || true
-#
-#    - name: Build APK
-#      run: buildozer android debug
-#
-#    - name: Upload APK Artifact
-#      uses: actions/upload-artifact@v4
-#      with:
-#        name: grocery-app-apk
-#        path: bin/*.apk
-name: P4A Manual Build
+name: Build Grocery App APK
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - "**"
 
 jobs:
-  build-apk:
+  build:
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v3
 
     - name: Set up Python
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v4
       with:
-        python-version: "3.10"
+        python-version: '3.10'
 
     - name: Install dependencies
       run: |
-        sudo apt update
-        sudo apt install -y zip unzip openjdk-17-jdk wget
-        pip install python-for-android
+        sudo apt-get update
+        sudo apt-get install -y zip unzip openjdk-17-jdk autoconf libtool pkg-config
+        pip install --upgrade pip
+        pip install buildozer cython
 
-    - name: Download Android SDK/NDK
+    - name: Accept Android SDK Licenses manually
       run: |
-        mkdir -p $HOME/android
-        cd $HOME/android
+        mkdir -p ~/.buildozer/android/platform/android-sdk/licenses
+        echo "8933bad161af4178b1185d1a37fbf41ea5269c55" > ~/.buildozer/android/platform/android-sdk/licenses/android-sdk-license
+        echo "d56f5187479451eabf01fb78af6dfcb131a6481e" >> ~/.buildozer/android/platform/android-sdk/licenses/android-sdk-license
+        echo "24333f8a63b6825ea9c5514f83c2829b004d1fee" > ~/.buildozer/android/platform/android-sdk/licenses/android-sdk-preview-license
 
-        wget https://dl.google.com/android/repository/commandlinetools-linux-10406996_latest.zip
-        unzip commandlinetools-linux-*.zip -d cmdline-tools
-        mkdir -p sdk/cmdline-tools/latest
-        mv cmdline-tools/* sdk/cmdline-tools/latest/
-
-        yes | sdk/cmdline-tools/latest/bin/sdkmanager --sdk_root=sdk \
-          "platform-tools" "platforms;android-30" "build-tools;34.0.0" "ndk;25.1.8937393"
-
-    - name: Build APK with p4a
+    - name: Manually install SDK cmdline tools & required packages
       run: |
-        export ANDROIDSDK="$HOME/android/sdk"
-        export ANDROIDNDK="$ANDROIDSDK/ndk/25.1.8937393"
-        export PATH="$ANDROIDSDK/platform-tools:$PATH"
+        SDK_DIR="$HOME/.buildozer/android/platform/android-sdk"
+        mkdir -p "$SDK_DIR/cmdline-tools"
+        cd "$SDK_DIR/cmdline-tools"
+        wget https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip -O cmdline.zip
+        unzip cmdline.zip
+        mv cmdline-tools latest
 
-        p4a apk \
-          --private . \
-          --package=org.example.groceryapp \
-          --name=GroceryApp \
-          --version=0.1 \
-          --bootstrap=sdl2 \
-          --requirements=python3,kivy \
-          --android-api=30 \
-          --ndk-dir=$ANDROIDNDK \
-          --sdk-dir=$ANDROIDSDK \
-          --build-tools=34.0.0 \
-          --output-filename GroceryApp.apk
+        export PATH="$SDK_DIR/cmdline-tools/latest/bin:$PATH"
 
-    - name: Upload APK
-      uses: actions/upload-artifact@v4
-      with:
-        name: GroceryApp
-        path: GroceryApp.apk
+        yes | sdkmanager --sdk_root="$SDK_DIR" \
+          "platform-tools" \
+          "platforms;android-30" \
+          "build-tools;34.0.0"
+
+        echo "✅ SDK & Build tools installed:"
+        ls -l "$SDK_DIR/build-tools"
+
+    - name: Run buildozer android update
+      run: buildozer android update
+
+    - name: Build APK
+      run: buildozer android debug
