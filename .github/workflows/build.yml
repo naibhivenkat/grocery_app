@@ -32,7 +32,7 @@ jobs:
         echo "d56f5187479451eabf01fb78af6dfcb131a6481e" >> ~/.buildozer/android/platform/android-sdk/licenses/android-sdk-license
         echo "24333f8a63b6825ea9c5514f83c2829b004d1fee" > ~/.buildozer/android/platform/android-sdk/licenses/android-sdk-preview-license
 
-    - name: Manually install SDK cmdline tools & required packages
+    - name: Manually install SDK cmdline tools and required packages
       run: |
         SDK_DIR="$HOME/.buildozer/android/platform/android-sdk"
         mkdir -p "$SDK_DIR/cmdline-tools"
@@ -41,15 +41,16 @@ jobs:
         unzip cmdline.zip
         mv cmdline-tools latest
 
+        # ✅ Create legacy "tools" path Buildozer expects
+        cd "$SDK_DIR"
+        ln -s cmdline-tools/latest tools
+
         export PATH="$SDK_DIR/cmdline-tools/latest/bin:$PATH"
 
         yes | sdkmanager --sdk_root="$SDK_DIR" \
           "platform-tools" \
           "platforms;android-30" \
           "build-tools;34.0.0"
-
-        echo "✅ SDK & Build tools installed:"
-        ls -l "$SDK_DIR/build-tools"
 
     - name: Run buildozer android update
       run: buildozer android update
