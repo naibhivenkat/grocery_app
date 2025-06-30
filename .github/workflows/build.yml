@@ -140,13 +140,14 @@ jobs:
     - name: Add SDK tools to PATH
       run: echo "$HOME/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin" >> $GITHUB_PATH
 
+    - name: Build APK (Update and Debug)
+      run: |
+          buildozer android update
+          buildozer android debug
+
     - name: Clean previous builds (optional but recommended)
       run: buildozer android clean
 
-    - name: Build APK
-      run: |
-        buildozer android update
-        buildozer android debug
 
     - name: Upload APK artifact
       uses: actions/upload-artifact@v4
