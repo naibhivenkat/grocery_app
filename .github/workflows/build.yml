@@ -140,11 +140,6 @@ jobs:
     - name: Add SDK tools to PATH
       run: echo "$HOME/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin" >> $GITHUB_PATH
 
-    - name: Fix libtool/autoconf for libffi
-      run: |
-        sudo libtoolize --force
-        sudo autoreconf --force --install
-
     - name: Clean previous builds (optional but recommended)
       run: buildozer android clean
 
