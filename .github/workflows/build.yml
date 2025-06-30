@@ -60,13 +60,9 @@ jobs:
         export LIBTOOLIZE="libtoolize"
         export AUTORECONF_FLAGS="--force --install --verbose -I m4"
 
-    - name: Clean Buildozer Cache (Recommended)
-      run: |
-          rm -rf .buildozer
-          rm -rf ~/.buildozer
-
     - name: Build APK
       run: |
+        buildozer android update
         buildozer android debug
 
     - name: Upload APK artifact
