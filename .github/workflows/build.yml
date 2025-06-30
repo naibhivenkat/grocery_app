@@ -63,6 +63,19 @@ jobs:
     - name: 🛠 Add SDK tools to PATH
       run: echo "$HOME/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin" >> $GITHUB_PATH
 
+    - name: Patch libtool macros for libffi build
+      run: |
+          # Ensure macro location is set
+          export ACLOCAL_PATH=/usr/share/aclocal
+          export M4=m4
+          
+          # Force reinstallation of libtool macros to aclocal path
+          sudo libtoolize --force --copy
+          sudo aclocal -I /usr/share/aclocal
+          sudo autoconf
+          sudo autoheader
+          sudo automake --add-missing --foreign
+
     - name: 🏗 Build APK (Update & Debug)
       run: |
         buildozer android update
