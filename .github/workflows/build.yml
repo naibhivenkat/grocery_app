@@ -21,10 +21,9 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y zip unzip openjdk-17-jdk autoconf automake libtool m4 libffi-dev
+        sudo apt-get install -y zip unzip openjdk-17-jdk autoconf automake libtool m4 libffi-dev pkg-config build-essential
         pip install --upgrade pip
         pip install buildozer cython
-    
 
     - name: Accept Android SDK Licenses
       run: |
@@ -49,7 +48,18 @@ jobs:
           "platforms;android-30" \
           "build-tools;34.0.0"
 
-    - name: Change to project directory
+    - name: Patch environment for autogen macros (libffi build)
+      run: |
+        echo "Patching autotools environment to allow undefined macros"
+        export M4=m4
+        export ACLOCAL="aclocal -I /usr/share/aclocal"
+        export AUTOMAKE="automake --foreign"
+        export AUTOCONF="autoconf"
+        export AUTOHEADER="autoheader"
+        export LIBTOOLIZE="libtoolize"
+        export AUTORECONF_FLAGS="--force --install --verbose -I m4"
+
+    - name: Build APK
       run: |
         buildozer android update
         buildozer android debug
