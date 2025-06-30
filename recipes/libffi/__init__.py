@@ -1,15 +1,12 @@
-def build_arch(self, arch):
-    import sh
-    from pythonforandroid.logger import shprint
-    build_dir = self.get_build_dir(arch.arch)
-    env = self.get_recipe_env(arch)
+from pythonforandroid.recipe import AutoconfRecipe
 
-    # Comment this out to skip autogen.sh
-    # shprint(sh.Command('./autogen.sh'), _env=env)
+class LibFFIFixRecipe(AutoconfRecipe):
+    version = '3.3'
+    url = 'https://github.com/libffi/libffi/releases/download/v{version}/libffi-{version}.tar.gz'
 
-    configure = sh.Command('./configure')
-    shprint(configure, '--host=' + arch.command_prefix,
-            '--disable-debug', '--disable-dependency-tracking',
-            '--prefix=' + self.get_install_dir(arch), _env=env)
-    shprint(sh.make, '-j5', _env=env)
-    shprint(sh.make.install, _env=env)
+    def build_arch(self, arch):
+        # Skip autogen.sh entirely
+        self.apply_patches(arch)
+        super().build_arch(arch)
+
+recipe = LibFFIFixRecipe()

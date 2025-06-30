@@ -28,6 +28,9 @@ package.domain = yourcompany.com
 android.p4a_repo = https://github.com/kivy/python-for-android.git
 android.p4a_branch = develop
 android.p4a_local_recipes = ./recipes
+p4a.extra_args = --override-recipe-build-dir=libffi=./recipes/libffi
+
+
 # (str) Application versioning (method 1)
 version = 0.1
 
