@@ -57,3 +57,6 @@ android.sdk = 30
 
 # (str) AAB or APK. Default is apk
 android.release = 0
+
+# Source DIR
+source.dir = .
