@@ -1,20 +1,15 @@
-[app]
-title = GroceryApp
+title = Grocery App
 package.name = groceryapp
-version = 0.1
-
-source.dir = .
-source.include_exts = py,png,jpg,kv,atlas,json
-
-requirements = python3,kivy,plyer,libffi
-
-android.permissions = INTERNET
+package.domain = org.test
+source.include_exts = py,png,jpg,kv,atlas,ttf,ttc,otf
+orientation = portrait
+fullscreen = 1
 android.api = 30
-android.minapi = 21
 android.build_tools = 34.0.0
-android.ndk = 25b
-
-# Disable native APIs (recommended for FPDF)
-android.use_android_native_api = False
-
-log_level = 2
+android.minapi = 21
+requirements = python3,kivy,plyer,requests,pillow
+android.permissions = INTERNET
+android.hostpython = 3
+android.ndk = 23b
+android.ndk_path = ~/.buildozer/android/platform/android-ndk-r23b
+android.permissions = INTERNET,WRITE_EXTERNAL_STORAGE,READ_EXTERNAL_STORAGE
