@@ -39,6 +39,6 @@ jobs:
 
     - name: Remove build-tools 36 (if present)
       run: rm -rf ~/.buildozer/android/platform/android-sdk/build-tools/36.0.0 || true
-
+    
     - name: Build APK
       run: buildozer android debug
