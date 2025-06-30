@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - "**"
+  workflow_dispatch:
 
 jobs:
   build:
@@ -21,7 +22,7 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y zip unzip openjdk-17-jdk autoconf automake libtool pkg-config
+        sudo apt-get install -y zip unzip openjdk-17-jdk autoconf automake libtool pkg-config libncurses5
         pip install --upgrade pip
         pip install buildozer cython
 
@@ -41,7 +42,7 @@ jobs:
         unzip cmdline.zip
         mv cmdline-tools latest
 
-        # ⚠️ Symlink legacy tools/ path so Buildozer finds sdkmanager
+        # Link legacy path so buildozer can find tools
         cd "$SDK_DIR"
         ln -s cmdline-tools/latest tools
 
@@ -52,11 +53,16 @@ jobs:
           "platforms;android-30" \
           "build-tools;34.0.0"
 
+    - name: Change to working directory
+      run: cd $GITHUB_WORKSPACE
+
     - name: Update project for Android
-      run: buildozer android update
+      run: |
+        buildozer android update
 
     - name: Build APK
-      run: buildozer android debug
+      run: |
+        buildozer android debug
 
     - name: Upload APK artifact
       uses: actions/upload-artifact@v4
