@@ -8,15 +8,14 @@ apt-get install -y zip unzip openjdk-17-jdk wget git \
   autoconf automake libtool m4 texinfo
 
 pip install --upgrade pip
-pip install Cython==0.29.36
-pip install git+https://github.com/kivy/python-for-android@develop
+#pip install Cython==0.29.36
+##pip install git+https://github.com/kivy/python-for-android@develop
 
 export ANDROID_SDK_ROOT=/opt/android-sdk
 export ANDROID_NDK_HOME=$ANDROID_SDK_ROOT/ndk/25.2.9519653
 export GRADLE_OPTS="-Xmx4g -Dorg.gradle.daemon=false"
 export ORG_GRADLE_PROJECT_javaOpts="-Xmx4g"
 export JAVA_TOOL_OPTIONS="-Xmx4g"
-
 
 mkdir -p $ANDROID_SDK_ROOT/cmdline-tools
 wget -q https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip -O sdk-tools.zip
@@ -33,6 +32,8 @@ $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager \
 echo "== Building APK =="
 rm -rf ~/.local/share/python-for-android/build
 rm -rf ~/.local/share/python-for-android/dists
+# The p4a command is executed using the p4a installed in the GHA environment
+# which is exposed to the Docker container through the volume mount and PATH.
 python3 -m pythonforandroid.toolchain apk \
   --private . \
   --package=com.gtn.app \
@@ -47,10 +48,7 @@ python3 -m pythonforandroid.toolchain apk \
   --ndk_dir=$ANDROID_NDK_HOME \
   --no-byte-compile-python
 
-#echo "== Copying APK to project root =="
-#APK_PATH=$(find /root/.local/share/python-for-android/dists/ -name "*.apk" | head -n 1)
-#echo "Found APK: $APK_PATH"
-#cp "$APK_PATH" /app/Guess_the_Number.apk
+
 echo "== Copying APK to project root =="
 APK_PATH=$(find /root/.local/share/python-for-android/dists/ -name "*.apk" | head -n 1)
 echo "Found APK: $APK_PATH"
