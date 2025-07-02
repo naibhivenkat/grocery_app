@@ -62,12 +62,12 @@ jobs:
               "build-tools;36.0.0" \
               "ndk;25.2.9519653"
 
-      - name: Clone and Build Kivy from Source
-        run: |
-          git clone --depth 1 https://github.com/kivy/kivy.git
-          cd kivy
-          python setup.py build_ext --inplace
-          cd ..
+#      - name: Clone and Build Kivy from Source
+#        run: |
+#          git clone --depth 1 https://github.com/kivy/kivy.git
+#          cd kivy
+#          python setup.py build_ext --inplace
+#          cd ..
 
 #      - name: Make build script executable
 #        run: chmod +x build_android_apk.sh
