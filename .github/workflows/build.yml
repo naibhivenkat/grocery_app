@@ -1,91 +1,95 @@
-name: Build Grocery App APK
+name: Build APK with python-for-android
 
 on:
   push:
     branches:
       - "**"
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
+    env:
+      ANDROID_HOME: ${{ github.workspace }}/android-sdk
+      ANDROID_SDK_ROOT: ${{ github.workspace }}/android-sdk
+      ANDROID_NDK_HOME: ${{ github.workspace }}/android-sdk/ndk/25.2.9519653
+      GRADLE_OPTS: "-Xmx4g -Dorg.gradle.daemon=false"
+      ORG_GRADLE_PROJECT_javaOpts: "-Xmx4g"
+      JAVA_TOOL_OPTIONS: "-Xmx4g"
+
+
     steps:
-    - name: 🧾 Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: 🧹 Clean old build artifacts
-      run: |
-        rm -rf .buildozer
-        rm -rf .cache
-        rm -rf ~/.buildozer
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
 
-    - name: 🐍 Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.10'
+      - name: Install OS Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            zip unzip openjdk-17-jdk python3-dev \
+            clang cmake libffi-dev libssl-dev libgl1-mesa-dev \
+            autoconf automake libtool pkg-config m4 texinfo \
+            git wget
+          
 
-    - name: 📦 Install system dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y \
-          zip unzip openjdk-17-jdk \
-          autoconf automake libtool m4 \
-          libffi-dev pkg-config build-essential \
-          libncurses6 libstdc++6
+      - name: Install Python Dependencies
+        run: |
+          pip install --upgrade pip
+          pip install Cython==0.29.36 python-for-android==2024.1.21
 
-    - name: 📦 Install Python dependencies
-      run: |
-        pip install --upgrade pip
-        pip install buildozer cython
+      - name: Setup Android SDK and NDK
+        run: |
+            export ANDROID_SDK_ROOT=$ANDROID_HOME
+            mkdir -p $ANDROID_SDK_ROOT/cmdline-tools
+            curl -o sdk-tools.zip https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip
+            unzip sdk-tools.zip -d $ANDROID_SDK_ROOT/cmdline-tools
+            mv $ANDROID_SDK_ROOT/cmdline-tools/cmdline-tools $ANDROID_SDK_ROOT/cmdline-tools/latest
 
-    - name: ✅ Accept Android SDK Licenses
-      run: |
-        mkdir -p ~/.buildozer/android/platform/android-sdk/licenses
-        echo "8933bad161af4178b1185d1a37fbf41ea5269c55" > ~/.buildozer/android/platform/android-sdk/licenses/android-sdk-license
-        echo "d56f5187479451eabf01fb78af6dfcb131a6481e" >> ~/.buildozer/android/platform/android-sdk/licenses/android-sdk-license
-        echo "24333f8a63b6825ea9c5514f83c2829b004d1fee" > ~/.buildozer/android/platform/android-sdk/licenses/android-sdk-preview-license
+            echo "ANDROID_SDK_ROOT=$ANDROID_SDK_ROOT" >> $GITHUB_ENV
+            echo "ANDROID_HOME=$ANDROID_SDK_ROOT" >> $GITHUB_ENV
+            echo "$ANDROID_SDK_ROOT/cmdline-tools/latest/bin" >> $GITHUB_PATH
 
-    - name: 📥 Install Android SDK manually
-      run: |
-        SDK_DIR="$HOME/.buildozer/android/platform/android-sdk"
-        mkdir -p "$SDK_DIR/cmdline-tools"
-        cd "$SDK_DIR/cmdline-tools"
-        wget https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip -O cmdline.zip
-        unzip cmdline.zip
-        mv cmdline-tools latest
-        cd "$SDK_DIR"
-        ln -s cmdline-tools/latest tools
-        yes | "$SDK_DIR/cmdline-tools/latest/bin/sdkmanager" --sdk_root="$SDK_DIR" \
-          "platform-tools" \
-          "platforms;android-30" \
-          "build-tools;34.0.0"
+            yes | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --licenses
+            $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager \
+              "platform-tools" \
+              "platforms;android-34" \
+              "build-tools;36.0.0" \
+              "ndk;25.2.9519653"
 
-    - name: 🛠 Add SDK tools to PATH
-      run: echo "$HOME/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin" >> $GITHUB_PATH
+      - name: Clone and Build Kivy from Source
+        run: |
+          git clone --depth 1 https://github.com/kivy/kivy.git
+          cd kivy
+          python setup.py build_ext --inplace
+          cd ..
 
-#    - name: Patch libtool macros for libffi build
-#      run: |
-#          # Ensure macro location is set
-#          export ACLOCAL_PATH=/usr/share/aclocal
-#          export M4=m4
-#
-#          # Force reinstallation of libtool macros to aclocal path
-#          sudo libtoolize --force --copy
-#          sudo aclocal -I /usr/share/aclocal
-#          sudo autoconf
-#          sudo autoheader
-#          sudo automake --add-missing --foreign
+#      - name: Make build script executable
+#        run: chmod +x build_android_apk.sh
 
-    - name: 🏗 Build APK (Update & Debug)
-      run: |
-        buildozer android update
-        buildozer android debug
+      - name: Remove pyproject.toml (non-package mode fix)
+        run: rm -f pyproject.toml
 
-    - name: 🧼 Clean previous builds (optional)
-      run: buildozer android clean
+      - name: Run Docker build
+        run: |
+          docker run --rm -v $PWD:/app -w /app python:3.11-slim bash build_apk.sh
 
-    - name: ⬆️ Upload APK artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: GroceryApp-debug-apk
-        path: grocery_app/bin/*.apk
+      - name: Debug APK Output
+        run: ls -lh
+
+      - name: 📤 Upload APK directly
+        uses: actions/upload-artifact@v4
+        with:
+          name: Guess_the_Number.apk
+          path: Guess_the_Number.apk
+          if-no-files-found: error
+
+
+
+
+
