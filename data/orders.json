@@ -481,5 +481,36 @@
     "status": "Pending",
     "timestamp": "2025-06-29 14:01:47",
     "shop_username": "shop1"
+  },
+  {
+    "id": "1751301982578",
+    "user": "cust",
+    "shop": "shop1",
+    "items": [
+      {
+        "name": "Tomato",
+        "qty": 1,
+        "price": 14
+      },
+      {
+        "name": "Onion",
+        "qty": 1,
+        "price": 20
+      },
+      {
+        "name": "Milk",
+        "qty": 1,
+        "price": 30
+      },
+      {
+        "name": "Bread",
+        "qty": 1,
+        "price": 25
+      }
+    ],
+    "total": 89,
+    "status": "Pending",
+    "timestamp": "2025-06-30 22:16:22",
+    "shop_username": "shop1"
   }
 ]
